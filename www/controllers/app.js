@@ -17,17 +17,6 @@ fespi.config(function($routeProvider) {
         reloadOnSearch:     false,
 	});
 
-    $routeProvider.when('/cartitas', {
-        templateUrl:        'views/cartitas.html', 
-        controller:         'cartitas', 
-        reloadOnSearch:     false,
-	});
-
-     $routeProvider.when('/datitos', {
-        templateUrl:        'views/datitos.html', 
-        reloadOnSearch:     false,
-	});
-
  	$routeProvider.otherwise({
         redirectTo:         '/'
     });
@@ -269,44 +258,9 @@ $scope.totalPuntaje =  $scope.camposPuntaje + $scope.pastosPuntaje + $scope.gran
         $scope.superArray.push($scope.aguardar);	
 		localStorage.setItem( "fespiDatos" , JSON.stringify($scope.superArray));
 			
-		$location.path("/");
+		$location.path("/mostrar"); 
 
 
-/* guardo en la base */
-    
-    console.log($scope.aguardar);
-
-        $http({
-            method: 'POST',     
-            url: 'http://ohno.com.ar/fespicola/agregar.php', 
-            data: 'infoResultadoNuevo=' + JSON.stringify($scope.aguardar), 
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function sipi(data){
-            console.log("se guardo en la base YAY!");
-            $scope.allResultados = data.data;
-            console.log(data.data);
-            $scope.info = '';
-            $location.path("/mostrar");
-        }, function nopo(data){
-            console.log("no se guardo en la base :/");
-
-
-            //guardo en una key del local que uso cuando no hay conexión para lo que no está sincronizado con la base => fespiDatosSoloLocal - superArraySoloLocal
-
-            if(!localStorage.getItem("fespiDatosSoloLocal")){
-                $scope.superArraySoloLocal=[];
-            }else{
-                $scope.superArraySoloLocal = JSON.parse(localStorage.getItem('fespiDatosSoloLocal'));
-            }
-
-            $scope.superArraySoloLocal.push($scope.aguardar);    
-            localStorage.setItem( "fespiDatosSoloLocal" , JSON.stringify($scope.superArraySoloLocal));
-
-
-            $location.path("/mostrar"); 
-
-
-        }); 
 			
     }
 	
@@ -318,85 +272,13 @@ fespi.controller("resultadosController", function ($scope, $http, $location) {
 
 /* MOSTRAR los resultados */
     
-    // esto sincroniza y postea lo que quedo sólo en el local con syncResultados().
-
-    $http({
-        method: 'POST',     
-        url: 'http://ohno.com.ar/fespicola/sincronizar.php', 
-        data: 'fespiDatosSoloLocal=' + localStorage.getItem('fespiDatosSoloLocal'), 
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).then(function sipi(data){
-        
-        // una vez que se sincronizó, borro la key del local donde guardo los datos que no están sincronizados con la base
-        localStorage.removeItem('fespiDatosSoloLocal');
-        console.log("se vació fespiDatosSoloLocal");
-
-
-        // ahora sincronizo los que tengo que borrar
-
-        $http({
-        method: 'POST',     
-        url: 'http://ohno.com.ar/fespicola/sincronizarborrados.php', 
-        data: 'fespiDatosAborrar=' + localStorage.getItem('fespiDatosAborrar'), 
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).then(function sipi(data) {
-
-
-        // una vez que se sincronizaron los borrados, borro la key del local donde guardo los resultados borrados que no estaban sincronizados con la base
-        localStorage.removeItem('fespiDatosAborrar');
-        console.log("se vació fespiDatosAborrar");
-
-
-        // esto levanta la info de la base con getResultados().
-
-        $http({
-            method: 'GET',
-            url: 'http://ohno.com.ar/fespicola/mostrar.php'
-        }).then(function sipi(data) {
-            
-            if(data.data.length > 0){
-                $scope.allResultados = data.data;  
-                console.log("entra al success del mostrar");
-
-            }            
-        });
-
-    });
-
-    }, function no(data){
-
-        //si no se puede conectar con la base, levanta del local de la key general (que tiene todo).
 
         $scope.allResultados = JSON.parse(localStorage.getItem('fespiDatos'));
-        console.log("no hay internet, levantamos del local y está todo bien (:");
-    }); 
-
 
 
 /* eliminar un resultado */
     
     $scope.borrar = function(x){
-
-        if(!localStorage.getItem("fespiDatosSoloLocal")){
-          $scope.superArraySoloLocal=[];
-      }else{
-          $scope.superArraySoloLocal = JSON.parse(localStorage.getItem('fespiDatosSoloLocal'));
-      }
-
-
-    //borro del fespiDatosSoloLocal para los casos en los cuales creo y borro el mismo resultado estando offline.
-
-    console.log('antes hay: %s items',  $scope.superArraySoloLocal.length)
-    $scope.superArraySoloLocal.splice($scope.superArraySoloLocal.indexOf(x), 1);
-    console.log('despues hay: %s items',  $scope.superArraySoloLocal.length)
-    localStorage.removeItem("fespiDatosSoloLocal");
-      
-    $scope.superArraySoloLocalNew = [];
-    angular.forEach($scope.superArraySoloLocal, function(x) {
-        $scope.superArraySoloLocalNew.push(x);
-            
-        localStorage.setItem("fespiDatosSoloLocal", JSON.stringify($scope.superArraySoloLocal))
-    });
 
 
     //borro del local storage
@@ -411,32 +293,6 @@ fespi.controller("resultadosController", function ($scope, $http, $location) {
 		localStorage.setItem("fespiDatos", JSON.stringify($scope.nuevaLista))
 	});
 
-                
-        $http({ 
-            method: 'POST',
-            url: 'http://ohno.com.ar/fespicola/eliminar.php', 
-            data: 'idResultado=' + x.id,  
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        }).then(function sipi(data){
-            $scope.allResultados = data.data;
-            console.log("chau chau resultado");
-            $location.path("/mostrar");
-
-        },function no (data){
-            console.log("no se borró de la base");
-
-
-            //guardo en una key del local que uso cuando no hay conexión para los que borré del local pero no de la base en dónde guardo sólo el ID. => fespiDatosAborrar - superArrayAborrar
-
-            if(!localStorage.getItem("fespiDatosAborrar")){
-                $scope.superArrayAborrar=[];
-            }else{
-                $scope.superArrayAborrar = JSON.parse(localStorage.getItem('fespiDatosAborrar'));
-            }
-
-            $scope.superArrayAborrar.push(x.id);    
-            localStorage.setItem( "fespiDatosAborrar" , JSON.stringify($scope.superArrayAborrar));
-
-        });
+  
     }
 });
