@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'telegramaraw';
+}
+
+
+
+.navbar{
+    background-color: #b14343;
+    color: white;
+}
+
+.menu{
+    background-color: #93c96d;
+}
+
+h1{
+    background-color: #b14343;
+    color: white;
+    font-family: 'i_pixel_uregular';
+}
+
+.navbar-brand, h2{
+    font-family: 'i_pixel_uregular';
+    text-transform: uppercase;
+}
+
+.list-group-item.active{
+    background-color: #f7c929;
+    color: black;
+}
+
+a.list-group-item{
+    color: white;
+    background-color: #CC4D53;
+}
+
+a.list-group-item:focus, 
+button.list-group-item:focus,
+.list-group-item.active:focus {
+    background-color: #CC4D5B;
+    color: #fff;
+}
+
+a.list-group-item.active, a.list-group-item.active:focus {
+    border: none;
+}
+
+#barrita{
+    color: white;
+}
+
+
+.form-group img {
+    width: 17%;
+    display: inline-block;
+}
+
+.input {
+    width: calc(70% - 2em);
+}
+
+.input__field{
+    color: #668b4c;
+    background-color: #ffe6b0;
+    
+}
+
+.input__label-content{
+    color: #53524d!important;
+}
+
+
+.error{
+    color: #b14343;
+}
+
+#botonito, .eli{
+    color: white;
+    border: none;
+}
+
+#botonito{
+    background-color: #379138;
+}
+
+.eli{
+    background-color: #b14343;
+}
+
+.eli{
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+form{
+    max-width: 500px;
+}
+
+.home,
+.muestrita,
+.cartitas,
+#infoEntrega{
+    min-height: 100%;
+    background-image: url(img/fondoagricola.jpg);
+    background-attachment: local;
+}
+
+.home{
+    background-size: contain;
+}
+
+.muestrita,
+.cartitas,
+#infoEntrega{
+    background-size: cover;
+}
+
+.muestra{
+    border-bottom:2px solid white;
+    padding:10px;
+    margin:15px;
+}
+
+.puntos{
+    font-size: 22px;
+}
+
+.portaInfo span, .portaInfo p{
+    color: black;
+}
+
+#infoEntrega{
+    padding: 20px;
+    text-align: center;
+}
+
+#infoEntrega p{
+    background-color: #ffe6b0;
+    padding: 12px 5px;
+}
+
+#infoEntrega ul {
+    margin-top: 20px;
+    padding: 12px 5px;
+    list-style: none;
+    background-color: #b14343;
+}
+
+ul{
+    list-style: none;
+}
+
+#infoEntrega ul li{
+    font-size: 16px;
+    color: #fff;
+}
+
+img{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+ .list-group-item {
+    background-color: transparent;
+}
